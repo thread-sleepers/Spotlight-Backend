@@ -1,0 +1,13 @@
+ktor:
+    application:
+        modules:
+            - com.thread_sleepers.ApplicationKt.module
+    deployment:
+        port: 8080
+
+    jwt:
+        secret: "secret"
+        issuer: "http:/localhost:8080"
+        audience: "http:/localhost:8080"
+        realm: "Access protected routes"
+        expiry: "2592000000" #30 days
