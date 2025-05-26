@@ -2,6 +2,7 @@ package com.thread_sleepers.db
 
 import com.thread_sleepers.models.request.AuthRequest
 import java.io.File
+import java.nio.file.Paths
 
 object DbManager {
     val dbFile = File("db/users.txt").apply {

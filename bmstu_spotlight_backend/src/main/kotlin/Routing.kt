@@ -3,7 +3,9 @@ package com.thread_sleepers
 import com.thread_sleepers.db.DbManager
 import com.thread_sleepers.models.request.AuthRequest
 import com.thread_sleepers.models.response.ScheduleResponse
+import com.thread_sleepers.models.response.UserProfileDto
 import com.thread_sleepers.util.ScheduleGenerator
+import com.thread_sleepers.util.UserProfileGenerator
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
 import io.ktor.server.auth.authenticate
@@ -52,14 +54,23 @@ fun Route.mainRoutes() {
             call.respond(status = HttpStatusCode.Unauthorized, message = "Invalid auth data")
         }
     }
+
+    authenticate(JWT_AUTH) {
+        get("/profile") {
+            val principal = call.principal<JWTPrincipal>()
+            val userName = principal?.payload?.getClaim(PAYLOAD_CLAIM)?.asString()
+            if (!userName.isNullOrEmpty() && DbManager.checkUserInDb(userName)) {
+                call.respond(UserProfileGenerator.generate())
+            } else {
+                call.respond(status = HttpStatusCode.Unauthorized, message = "Invalid auth data")
+            }
+        }
+    }
 }
 
 fun Route.routesWithoutAuth() {
     get("/schedule") {
         call.respond(ScheduleResponse(ScheduleGenerator.generate()))
-    }
-    get("/profile") {
-        // call.respond(ScheduleResponse(ScheduleGenerator.generate()))
     }
 }
 
@@ -79,9 +90,11 @@ fun Route.authRoutes(config: JWTConfig) {
 
     post("login") {
         val requestData = call.receive<AuthRequest>()
+        println("Received request: userName = ${requestData.userName}, password = ${requestData.password}")
 
         val storedPassword = DbManager.getPasswordForUser(requestData.userName)
             ?: return@post call.respond(status = HttpStatusCode.BadRequest, "User doesn't exists")
+        println("Stored password: $storedPassword")
 
         if (storedPassword == requestData.password) {
             val token = generateToken(config = config, userName = requestData.userName)
