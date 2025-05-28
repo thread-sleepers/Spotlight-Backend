@@ -6,16 +6,16 @@ object ScheduleGenerator {
     fun generate(): List<ScheduleDto> {
         return listOf(
             ScheduleDto(
-                title = "Математичесиий анализ",
-                type = "Лекция",
-                place = "320",
+                title = "Иностранный язык",
+                type = "Семинар",
+                place = "389",
                 startTime = "8:30",
                 endTime = "10:00"
             ),
             ScheduleDto(
                 title = "Математичесиий анализ",
-                type = "Семинар",
-                place = "321",
+                type = "Лекция",
+                place = "384",
                 startTime = "10:10",
                 endTime = "11:40"
             ),
@@ -24,12 +24,12 @@ object ScheduleGenerator {
                 type = null,
                 place = "Столовая",
                 startTime = "11:40",
-                endTime = "12:250"
+                endTime = "12:25"
             ),
             ScheduleDto(
                 title = "История",
-                type = null,
-                place = "444",
+                type = "Лекция",
+                place = "404",
                 startTime = "12:25",
                 endTime = "13:55"
             ),
